@@ -135,6 +135,3 @@ Sensitive credentials (database URL, passwords, API keys) are stored in `applica
 
 ---
 
-## 👤 Author
-
-**Blina Sopjani** — [@blinasopjani](https://github.com/blinasopjani)
