@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="sq">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniFLIX | Netflix Clone</title>
+    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Login Section -->
+    <section id="login-section" class="auth-section active">
+        <div class="auth-overlay">
+            <div class="logo-large">UniFLIX</div>
+            <div class="auth-card">
+                <h1>Kyçu</h1>
+                <form id="login-form">
+                    <div class="input-group">
+                        <input type="email" id="login-email" required placeholder="E-mail">
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="login-password" required placeholder="Fjalëkalimi">
+                    </div>
+                    <button type="submit" class="btn-netflix">Kyçu</button>
+                    <div class="auth-help">
+                        <span>Nuk keni llogari? <a href="#" onclick="toggleAuthMode()">Regjistrohu</a></span>
+                    </div>
+                </form>
+
+                <form id="register-form" style="display: none;">
+                    <div class="input-group">
+                        <input type="email" id="reg-email" required placeholder="E-mail">
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="reg-password" required placeholder="Fjalëkalimi">
+                    </div>
+                    <button type="submit" class="btn-netflix">Regjistrohu</button>
+                    <div class="auth-help">
+                        <span>Keni llogari? <a href="#" onclick="toggleAuthMode()">Kyçu</a></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profiles Section (Who is watching) -->
+    <section id="profile-section" class="auth-section">
+        <div class="profile-container">
+            <h1>Kush po shikon?</h1>
+            <div id="profile-list" class="profile-list">
+                <!-- Profiles will be injected here -->
+            </div>
+            <button id="btn-manage" class="btn-manage" onclick="toggleManageProfiles()">MENAXHO PROFILET</button>
+        </div>
+    </section>
+
+    <!-- Main App Section -->
+    <div id="app-content" style="display: none;">
+        <nav class="navbar">
+            <div class="nav-mobile-toggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo" onclick="showSection('home')">UniFLIX</div>
+            <div class="nav-links">
+                <a href="javascript:void(0)" class="active" onclick="showSection('home')">Ballina</a>
+                <a href="javascript:void(0)" onclick="filterByType('series')">Seriale</a>
+                <a href="javascript:void(0)" onclick="filterByType('movie')">Filma</a>
+                <a href="javascript:void(0)" onclick="showSection('favorites')">Lista Ime</a>
+            </div>
+            <div class="nav-right">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="movie-search" placeholder="Tituj, njerëz, zhanre">
+                    <button id="sync-btn" title="Sinkronizo me OMDb" style="background:none; border:none; color:white; cursor:pointer; margin-left:10px;">
+                        <i class="fas fa-sync"></i>
+                    </button>
+                </div>
+                <div class="user-profile-dropdown">
+                    <div class="user-profile">
+                        <img src="" alt="Profile" id="current-user-img" class="profile-img">
+                        <i class="fas fa-caret-down"></i>
+                    </div>
+                    <div class="dropdown-content">
+                        <div class="dropdown-item" onclick="showSection('profiles')">
+                            <i class="fas fa-exchange-alt"></i> Ndërro Profilin
+                        </div>
+                        <div class="dropdown-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Dil nga UniFLIX
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <header class="hero" id="hero-banner">
+            <div class="hero-info">
+                <h1 id="hero-title">UniFLIX</h1>
+                <p id="hero-desc">Filmat, serialet dhe më shumë. Pa limit.</p>
+                <div class="hero-btns">
+                    <button id="hero-play-btn" class="btn-white" onclick="scrollToTrending()"><i class="fas fa-play"></i> Shiko Tani</button>
+                    <button class="btn-gray" onclick="showHowItWorks()"><i class="fas fa-info-circle"></i> Më shumë info</button>
+                </div>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <!-- Home Section -->
+            <section id="home-section" class="section active">
+                <div class="row" id="trending-section">
+                    <h2 id="grid-title">Trendet e Fundit</h2>
+                    <div id="movie-grid" class="movie-row"></div>
+                </div>
+
+                <div class="row" id="home-favorites-row">
+                    <h2>Lista Ime</h2>
+                    <div id="home-favorites-grid" class="movie-row"></div>
+                </div>
+
+                <div class="row" id="home-recommendations-row">
+                    <h2>Rekomandimet për Ju</h2>
+                    <div id="home-recommendations-grid" class="movie-row"></div>
+                </div>
+            </section>
+
+            <!-- Isolated Sections -->
+            <section id="favorites-section" class="section">
+                <div class="container">
+                    <div class="grid-header">
+                        <h2>Lista Ime</h2>
+                    </div>
+                    <div id="favorites-grid" class="movie-grid"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- AI Bot UI -->
+    <div id="ai-bot" class="ai-bot-container">
+        <div class="ai-bot-toggle" onclick="toggleAiBot()">
+            <i class="fas fa-robot"></i>
+            <span>Më Rekomando</span>
+        </div>
+        <div class="ai-chat-window" id="ai-chat-window">
+            <div class="ai-chat-header">
+                <h3>Më Rekomando</h3>
+                <i class="fas fa-times" onclick="toggleAiBot()"></i>
+            </div>
+            <div class="ai-chat-messages" id="ai-chat-messages">
+                <div class="message ai">Përshëndetje! Unë jam asistenti juaj për rekomandime. Çfarë dëshironi të shikoni sot? Mund t'ju rekomandoj filma aksion, komedi, apo seriale!</div>
+            </div>
+            <div class="ai-chat-input">
+                <input type="text" id="ai-input" placeholder="Shkruaj këtu...">
+                <button onclick="sendAiMessage()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="movie-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-banner" id="modal-banner">
+                <span class="close">&times;</span>
+                <div class="modal-banner-info">
+                    <h2 id="modal-title">Titulli</h2>
+                    <div class="modal-btns">
+                        <button id="modal-play-btn" class="btn-white"><i class="fas fa-play"></i> Shiko</button>
+                        <button id="modal-fav-btn" class="btn-circle"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-left">
+                    <div class="modal-meta">
+                        <span id="modal-year">2024</span>
+                        <span class="match">98% Përputhje</span>
+                        <span id="modal-genre">Zhanri</span>
+                    </div>
+                    <p id="modal-desc">Përshkrimi...</p>
+                </div>
+                <div class="modal-right">
+                    <div class="rating-box">
+                        <p>Vlerëso:</p>
+                        <div class="stars">
+                            <i class="far fa-star" data-value="1"></i>
+                            <i class="far fa-star" data-value="2"></i>
+                            <i class="far fa-star" data-value="3"></i>
+                            <i class="far fa-star" data-value="4"></i>
+                            <i class="far fa-star" data-value="5"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How it Works Modal -->
+    <div id="how-it-works-modal" class="modal">
+        <div class="modal-content info-modal">
+            <div class="info-header">
+                <h2>Si funksionon UniFLIX?</h2>
+                <span class="close-info" onclick="closeHowItWorks()">&times;</span>
+            </div>
+            <div class="info-body">
+                <div class="info-card">
+                    <i class="fas fa-key"></i>
+                    <h3>Hyrja dhe Profilet</h3>
+                    <p>Llogaria juaj është porta drejt argëtimit. Mund të krijoni deri në 4 profile të ndryshme në një llogari, secili me listën e tij të preferuarve dhe rekomandime unike.</p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-cloud-download-alt"></i>
+                    <h3>Sinkronizimi me API</h3>
+                    <p>Ne përdorim OMDb API për të marrë informacionet më të fundit mbi filmat. Me butonin "Sync", aplikacioni shton automatikisht filma të rinj nga baza e të dhënave botërore.</p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-brain"></i>
+                    <h3>Sistemi i Rekomandimeve</h3>
+                    <p>UniAI analizon zhanret e filmave që keni në "Listën Time" dhe vlerësimet me yje që u jepni filmave për të sugjeruar titujt që do t'ju pëlqejnë më së shumti.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=4"></script>
+</body>
+
+</html>
