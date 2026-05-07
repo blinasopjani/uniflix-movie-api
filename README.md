@@ -2,6 +2,7 @@
 
 A RESTful API built with **Spring Boot 3.2** and **Java 17** for managing movies, user profiles, favorites, ratings, and personalized recommendations — the backend powering the UniFLIX streaming platform.
 
+<img width="1118" height="681" alt="image" src="https://github.com/user-attachments/assets/e8fff55b-0303-492a-b7b3-93ed0681dae3" />
 
 
 ---
